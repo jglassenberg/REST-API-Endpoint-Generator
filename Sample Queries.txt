@@ -1,0 +1,278 @@
+/************************************
+
+Test Data
+
+************************************/
+
+
+
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Swagger Petstore",
+    "description" : "This is a sample Petstore server.  You can find\nout more about Swagger at\n[http://swagger.io](http://swagger.io) or on\n[irc.freenode.net, #swagger](http://swagger.io/irc/).\n",
+    "termsOfService" : "http://swagger.io/terms/",
+    "contact" : {
+      "email" : "apiteam@swagger.io"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "1.0.0"
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/jglassenberg/Test/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  } ],
+  "tags" : [ {
+		  "name": "test",
+		  "description": "test",
+          "externalDocs": {
+              "description":"",
+		      "url":""
+          }}  ],
+  "paths" : {
+  },
+  "components" : {
+    "schemas" : {
+      "Order" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "petId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "quantity" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "shipDate" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Order Status",
+            "enum" : [ "placed", "approved", "delivered" ]
+          },
+          "complete" : {
+            "type" : "boolean",
+            "default" : false
+          }
+        },
+        "xml" : {
+          "name" : "Order"
+        }
+      },
+      "Category" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "Category"
+        }
+      },
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "userStatus" : {
+            "type" : "integer",
+            "description" : "User Status",
+            "format" : "int32"
+          }
+        },
+        "xml" : {
+          "name" : "User"
+        }
+      },
+      "Tag" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "Tag"
+        }
+      },
+      "Pet" : {
+        "required" : [ "name", "photoUrls" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "category" : {
+            "$ref" : "#/components/schemas/Category"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "doggie"
+          },
+          "photoUrls" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "photoUrl",
+              "wrapped" : true
+            },
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "tags" : {
+            "type" : "array",
+            "xml" : {
+              "name" : "tag",
+              "wrapped" : true
+            },
+            "items" : {
+              "$ref" : "#/components/schemas/Tag"
+            }
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "pet status in the store",
+            "enum" : [ "available", "pending", "sold" ]
+          }
+        },
+        "xml" : {
+          "name" : "Pet"
+        }
+      },
+      "ApiResponse" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "body" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Updated name of the pet"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Updated status of the pet"
+          }
+        }
+      }
+    },
+    "requestBodies" : {
+      "Pet" : {
+        "description" : "Pet object that needs to be added to the store",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Pet"
+            }
+          },
+          "application/xml" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Pet"
+            }
+          }
+        },
+        "required" : true
+      },
+      "UserArray" : {
+        "description" : "List of user object",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes" : {
+      "petstore_auth" : {
+        "type" : "oauth2",
+        "flows" : {
+          "implicit" : {
+            "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+            "scopes" : {
+              "write:pets" : "modify pets in your account",
+              "read:pets" : "read your pets"
+            }
+          }
+        }
+      },
+      "api_key" : {
+        "type" : "apiKey",
+        "name" : "api_key",
+        "in" : "header"
+      }
+    }
+  }
+}
+    
+//JSON:
+
+//file:///home/chronos/u-7b70e944b577da23177a7e21bcb414c43d155558/MyFiles/Downloads/APIBuilder/test.html?outputChoice=yaml&pagination=Next-Prev&updateType=PUT&securityKeys=Oauth2,ApiKeyAuth&redirectUrl=www.test.com&json=%7B%0A%20%20%22openapi%22%20%3A%20%223.0.0%22%2C%0A%20%20%22info%22%20%3A%20%7B%0A%20%20%20%20%22title%22%20%3A%20%22Swagger%20Petstore%22%2C%0A%20%20%20%20%22description%22%20%3A%20%22This%20is%20a%20sample%20Petstore%20server.%20%20You%20can%20find%5Cnout%20more%20about%20Swagger%20at%5Cn%5Bhttp%3A%2F%2Fswagger.io%5D%28http%3A%2F%2Fswagger.io%29%20or%20on%5Cn%5Birc.freenode.net%2C%20%23swagger%5D%28http%3A%2F%2Fswagger.io%2Firc%2F%29.%5Cn%22%2C%0A%20%20%20%20%22termsOfService%22%20%3A%20%22http%3A%2F%2Fswagger.io%2Fterms%2F%22%2C%0A%20%20%20%20%22contact%22%20%3A%20%7B%0A%20%20%20%20%20%20%22email%22%20%3A%20%22apiteam%40swagger.io%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%22license%22%20%3A%20%7B%0A%20%20%20%20%20%20%22name%22%20%3A%20%22Apache%202.0%22%2C%0A%20%20%20%20%20%20%22url%22%20%3A%20%22http%3A%2F%2Fwww.apache.org%2Flicenses%2FLICENSE-2.0.html%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%22version%22%20%3A%20%221.0.0%22%0A%20%20%7D%2C%0A%20%20%22externalDocs%22%20%3A%20%7B%0A%20%20%20%20%22description%22%20%3A%20%22Find%20out%20more%20about%20Swagger%22%2C%0A%20%20%20%20%22url%22%20%3A%20%22http%3A%2F%2Fswagger.io%22%0A%20%20%7D%2C%0A%20%20%22servers%22%20%3A%20%5B%20%7B%0A%20%20%20%20%22url%22%20%3A%20%22https%3A%2F%2Fvirtserver.swaggerhub.com%2Fjglassenberg%2FTest%2F1.0.0%22%2C%0A%20%20%20%20%22description%22%20%3A%20%22SwaggerHub%20API%20Auto%20Mocking%22%0A%20%20%7D%20%5D%2C%0A%20%20%22tags%22%20%3A%20%5B%20%7B%0A%09%09%20%20%22name%22%3A%20%22test%22%2C%0A%09%09%20%20%22description%22%3A%20%22test%22%2C%0A%20%20%20%20%20%20%20%20%20%20%22externalDocs%22%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%3A%22%22%2C%0A%09%09%20%20%20%20%20%20%22url%22%3A%22%22%0A%20%20%20%20%20%20%20%20%20%20%7D%7D%20%20%5D%2C%0A%20%20%22paths%22%20%3A%20%7B%0A%20%20%7D%2C%0A%20%20%22components%22%20%3A%20%7B%0A%20%20%20%20%22schemas%22%20%3A%20%7B%0A%20%20%20%20%20%20%22Order%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22id%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22petId%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22quantity%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int32%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22shipDate%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22date-time%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22status%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22Order%20Status%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22enum%22%20%3A%20%5B%20%22placed%22%2C%20%22approved%22%2C%20%22delivered%22%20%5D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22complete%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22boolean%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22default%22%20%3A%20false%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22Order%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22Category%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22id%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22Category%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22User%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22id%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22username%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22firstName%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22lastName%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22email%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22password%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22phone%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22userStatus%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22User%20Status%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int32%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22User%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22Tag%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22id%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22Tag%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22Pet%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22required%22%20%3A%20%5B%20%22name%22%2C%20%22photoUrls%22%20%5D%2C%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22id%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int64%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22category%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22%24ref%22%20%3A%20%22%23%2Fcomponents%2Fschemas%2FCategory%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22example%22%20%3A%20%22doggie%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22photoUrls%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22array%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22photoUrl%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22wrapped%22%20%3A%20true%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22items%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22tags%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22array%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22tag%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22wrapped%22%20%3A%20true%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22items%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%24ref%22%20%3A%20%22%23%2Fcomponents%2Fschemas%2FTag%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22status%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22pet%20status%20in%20the%20store%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22enum%22%20%3A%20%5B%20%22available%22%2C%20%22pending%22%2C%20%22sold%22%20%5D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22xml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22Pet%22%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22ApiResponse%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22code%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22integer%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22format%22%20%3A%20%22int32%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22message%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22body%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22object%22%2C%0A%20%20%20%20%20%20%20%20%22properties%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22name%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22Updated%20name%20of%20the%20pet%22%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22status%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22string%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22Updated%20status%20of%20the%20pet%22%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%22requestBodies%22%20%3A%20%7B%0A%20%20%20%20%20%20%22Pet%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22Pet%20object%20that%20needs%20to%20be%20added%20to%20the%20store%22%2C%0A%20%20%20%20%20%20%20%20%22content%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22application%2Fjson%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22schema%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%24ref%22%20%3A%20%22%23%2Fcomponents%2Fschemas%2FPet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%20%20%22application%2Fxml%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22schema%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%24ref%22%20%3A%20%22%23%2Fcomponents%2Fschemas%2FPet%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22required%22%20%3A%20true%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22UserArray%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22description%22%20%3A%20%22List%20of%20user%20object%22%2C%0A%20%20%20%20%20%20%20%20%22content%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22application%2Fjson%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22schema%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22array%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22items%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22%24ref%22%20%3A%20%22%23%2Fcomponents%2Fschemas%2FUser%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%20%20%22required%22%20%3A%20true%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%2C%0A%20%20%20%20%22securitySchemes%22%20%3A%20%7B%0A%20%20%20%20%20%20%22petstore_auth%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22oauth2%22%2C%0A%20%20%20%20%20%20%20%20%22flows%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%22implicit%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22authorizationUrl%22%20%3A%20%22http%3A%2F%2Fpetstore.swagger.io%2Foauth%2Fdialog%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%22scopes%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22write%3Apets%22%20%3A%20%22modify%20pets%20in%20your%20account%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22read%3Apets%22%20%3A%20%22read%20your%20pets%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%2C%0A%20%20%20%20%20%20%22api_key%22%20%3A%20%7B%0A%20%20%20%20%20%20%20%20%22type%22%20%3A%20%22apiKey%22%2C%0A%20%20%20%20%20%20%20%20%22name%22%20%3A%20%22api_key%22%2C%0A%20%20%20%20%20%20%20%20%22in%22%20%3A%20%22header%22%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D
+
+//YAML: 
+
+//file:///home/chronos/u-7b70e944b577da23177a7e21bcb414c43d155558/MyFiles/Downloads/APIBuilder/test.html?outputChoice=json&pagination=Next-Prev&updateType=PUT&securityKeys=Oauth2,ApiKeyAuth&redirectUrl=www.test.com&yaml=openapi%3A%203.0.0%0Ainfo%3A%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20a%20sample%20Petstore%20server.%20%20You%20can%20find%0A%20%20%20%20out%20more%20about%20Swagger%20at%0A%20%20%20%20%5Bhttp%3A%2F%2Fswagger.io%5D%28http%3A%2F%2Fswagger.io%29%20or%20on%0A%20%20%20%20%5Birc.freenode.net%2C%20%23swagger%5D%28http%3A%2F%2Fswagger.io%2Firc%2F%29.%0A%20%20version%3A%20%221.0.0%22%0A%20%20title%3A%20Swagger%20Petstore%0A%20%20termsOfService%3A%20%27http%3A%2F%2Fswagger.io%2Fterms%2F%27%0A%20%20contact%3A%0A%20%20%20%20email%3A%20apiteam%40swagger.io%0A%20%20license%3A%0A%20%20%20%20name%3A%20Apache%202.0%0A%20%20%20%20url%3A%20%27http%3A%2F%2Fwww.apache.org%2Flicenses%2FLICENSE-2.0.html%27%0Aservers%3A%0A%23%20Added%20by%20API%20Auto%20Mocking%20Plugin%0A%20%20-%20description%3A%20SwaggerHub%20API%20Auto%20Mocking%0A%20%20%20%20url%3A%20https%3A%2F%2Fvirtserver.swaggerhub.com%2Fjglassenberg%2Fpetstore%2F1.0.0%0A%20%20-%20url%3A%20%27https%3A%2F%2Fpetstore.swagger.io%2Fv2%27%0Atags%3A%0A%20%20-%20name%3A%20pet%0A%20%20%20%20description%3A%20Everything%20about%20your%20Pets%0A%20%20%20%20externalDocs%3A%0A%20%20%20%20%20%20description%3A%20Find%20out%20more%0A%20%20%20%20%20%20url%3A%20%27http%3A%2F%2Fswagger.io%27%0A%20%20-%20name%3A%20store%0A%20%20%20%20description%3A%20Access%20to%20Petstore%20orders%0A%20%20-%20name%3A%20user%0A%20%20%20%20description%3A%20Operations%20about%20user%0A%20%20%20%20externalDocs%3A%0A%20%20%20%20%20%20description%3A%20Find%20out%20more%20about%20our%20store%0A%20%20%20%20%20%20url%3A%20%27http%3A%2F%2Fswagger.io%27%0AexternalDocs%3A%0A%20%20description%3A%20Find%20out%20more%20about%20Swagger%0A%20%20url%3A%20%27http%3A%2F%2Fswagger.io%27%0Acomponents%3A%0A%20%20schemas%3A%0A%20%20%20%20Order%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20id%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20petId%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20quantity%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int32%0A%20%20%20%20%20%20%20%20shipDate%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20%20%20format%3A%20date-time%0A%20%20%20%20%20%20%20%20status%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20%20%20description%3A%20Order%20Status%0A%20%20%20%20%20%20%20%20%20%20enum%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20placed%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20approved%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20delivered%0A%20%20%20%20%20%20%20%20complete%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20boolean%0A%20%20%20%20%20%20%20%20%20%20default%3A%20false%0A%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20name%3A%20Order%0A%20%20%20%20Category%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20id%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20name%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20name%3A%20Category%0A%20%20%20%20User%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20id%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20username%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20firstName%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20lastName%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20email%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20password%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20phone%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20userStatus%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int32%0A%20%20%20%20%20%20%20%20%20%20description%3A%20User%20Status%0A%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20name%3A%20User%0A%20%20%20%20Tag%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20id%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20name%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20name%3A%20Tag%0A%20%20%20%20Pet%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20required%3A%0A%20%20%20%20%20%20%20%20-%20name%0A%20%20%20%20%20%20%20%20-%20photoUrls%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20id%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int64%0A%20%20%20%20%20%20%20%20category%3A%0A%20%20%20%20%20%20%20%20%20%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FCategory%27%0A%20%20%20%20%20%20%20%20name%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20%20%20example%3A%20doggie%0A%20%20%20%20%20%20%20%20photoUrls%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20array%0A%20%20%20%20%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20name%3A%20photoUrl%0A%20%20%20%20%20%20%20%20%20%20%20%20wrapped%3A%20true%0A%20%20%20%20%20%20%20%20%20%20items%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20tags%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20array%0A%20%20%20%20%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20name%3A%20tag%0A%20%20%20%20%20%20%20%20%20%20%20%20wrapped%3A%20true%0A%20%20%20%20%20%20%20%20%20%20items%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FTag%27%0A%20%20%20%20%20%20%20%20status%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20%20%20description%3A%20pet%20status%20in%20the%20store%0A%20%20%20%20%20%20%20%20%20%20enum%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20available%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20pending%0A%20%20%20%20%20%20%20%20%20%20%20%20-%20sold%0A%20%20%20%20%20%20xml%3A%0A%20%20%20%20%20%20%20%20name%3A%20Pet%0A%20%20%20%20ApiResponse%3A%0A%20%20%20%20%20%20type%3A%20object%0A%20%20%20%20%20%20properties%3A%0A%20%20%20%20%20%20%20%20code%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20integer%0A%20%20%20%20%20%20%20%20%20%20format%3A%20int32%0A%20%20%20%20%20%20%20%20type%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20%20%20%20%20%20%20message%3A%0A%20%20%20%20%20%20%20%20%20%20type%3A%20string%0A%20%20requestBodies%3A%0A%20%20%20%20Pet%3A%0A%20%20%20%20%20%20content%3A%0A%20%20%20%20%20%20%20%20application%2Fjson%3A%0A%20%20%20%20%20%20%20%20%20%20schema%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FPet%27%0A%20%20%20%20%20%20%20%20application%2Fxml%3A%0A%20%20%20%20%20%20%20%20%20%20schema%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FPet%27%0A%20%20%20%20%20%20description%3A%20Pet%20object%20that%20needs%20to%20be%20added%20to%20the%20store%0A%20%20%20%20%20%20required%3A%20true%0A%20%20%20%20UserArray%3A%0A%20%20%20%20%20%20content%3A%0A%20%20%20%20%20%20%20%20application%2Fjson%3A%0A%20%20%20%20%20%20%20%20%20%20schema%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20type%3A%20array%0A%20%20%20%20%20%20%20%20%20%20%20%20items%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FUser%27%0A%20%20%20%20%20%20description%3A%20List%20of%20user%20object%0A%20%20%20%20%20%20required%3A%20true%0A%20%20securitySchemes%3A%0A%20%20%20%20petstore_auth%3A%0A%20%20%20%20%20%20type%3A%20oauth2%0A%20%20%20%20%20%20flows%3A%0A%20%20%20%20%20%20%20%20implicit%3A%0A%20%20%20%20%20%20%20%20%20%20authorizationUrl%3A%20%27http%3A%2F%2Fpetstore.swagger.io%2Foauth%2Fdialog%27%0A%20%20%20%20%20%20%20%20%20%20scopes%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%27write%3Apets%27%3A%20modify%20pets%20in%20your%20account%0A%20%20%20%20%20%20%20%20%20%20%20%20%27read%3Apets%27%3A%20read%20your%20pets%0A%20%20%20%20api_key%3A%0A%20%20%20%20%20%20type%3A%20apiKey%0A%20%20%20%20%20%20name%3A%20api_key%0A%20%20%20%20%20%20in%3A%20header
+
+
+//file:///home/chronos/u-7b70e944b577da23177a7e21bcb414c43d155558/MyFiles/Downloads/APIBuilder/test.html?outputChoice=json&pagination=Next-Prev&updateType=PUT&securityKeys=Oauth2,ApiKeyAuth&redirectUrl=www.test.com&yaml=openapi%3A%203.0.0%0A%23%20Added%20by%20API%20Auto%20Mocking%20Plugin%0Aservers%3A%0A%C2%A0%20-%20description%3A%20SwaggerHub%20API%20Auto%20Mocking%0A%C2%A0%20%C2%A0%20url%3A%20https%3A%2F%2Fvirtserver.swaggerhub.com%2Fjglassenberg%2FTest%2F1.0.0%0Ainfo%3A%0A%C2%A0%20description%3A%20%7C%0A%C2%A0%20%C2%A0%20This%20is%20a%20sample%20Petstore%20server.%20%C2%A0You%20can%20find%0A%C2%A0%20%C2%A0%20out%20more%20about%20Swagger%20at%0A%C2%A0%20%C2%A0%20%5Bhttp%3A%2F%2Fswagger.io%5D(http%3A%2F%2Fswagger.io)%20or%20on%0A%C2%A0%20%C2%A0%20%5Birc.freenode.net%2C%20%23swagger%5D(http%3A%2F%2Fswagger.io%2Firc%2F).%0A%C2%A0%20version%3A%20%221.0.0%22%0A%C2%A0%20title%3A%20Swagger%20Petstore%0A%C2%A0%20termsOfService%3A%20%27http%3A%2F%2Fswagger.io%2Fterms%2F%27%0A%C2%A0%20contact%3A%0A%C2%A0%20%C2%A0%20email%3A%20apiteam%40swagger.io%0A%C2%A0%20license%3A%0A%C2%A0%20%C2%A0%20name%3A%20Apache%202.0%0A%C2%A0%20%C2%A0%20url%3A%20%27http%3A%2F%2Fwww.apache.org%2Flicenses%2FLICENSE-2.0.html%27%0Atags%3A%0A%C2%A0%20-%20name%3A%20pet%0A%C2%A0%20%C2%A0%20description%3A%20Everything%20about%20your%20Pets%0A%C2%A0%20%C2%A0%20externalDocs%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20Find%20out%20more%0A%C2%A0%20%C2%A0%20%C2%A0%20url%3A%20%27http%3A%2F%2Fswagger.io%27%0A%C2%A0%20-%20name%3A%20store%0A%C2%A0%20%C2%A0%20description%3A%20Access%20to%20Petstore%20orders%0A%C2%A0%20-%20name%3A%20user%0A%C2%A0%20%C2%A0%20description%3A%20Operations%20about%20user%0A%C2%A0%20%C2%A0%20externalDocs%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20Find%20out%20more%20about%20our%20store%0A%C2%A0%20%C2%A0%20%C2%A0%20url%3A%20%27http%3A%2F%2Fswagger.io%27%0Apaths%3A%0Acomponents%3A%0A%C2%A0%20schemas%3A%0A%C2%A0%20%C2%A0%20Order%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20id%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20petId%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20quantity%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int32%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20shipDate%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20date-time%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20status%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20Order%20Status%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20enum%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20placed%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20approved%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20delivered%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20complete%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20boolean%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20default%3A%20false%0A%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20Order%0A%C2%A0%20%C2%A0%20Category%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20id%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20Category%0A%C2%A0%20%C2%A0%20User%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20id%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20username%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20firstName%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20lastName%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20email%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20password%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20phone%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20userStatus%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int32%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20User%20Status%0A%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20User%0A%C2%A0%20%C2%A0%20Tag%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20id%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20Tag%0A%C2%A0%20%C2%A0%20Pet%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20required%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20name%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20photoUrls%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20id%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int64%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20category%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FCategory%27%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20example%3A%20doggie%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20photoUrls%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20array%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20photoUrl%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20wrapped%3A%20true%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20items%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20tags%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20array%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20tag%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20wrapped%3A%20true%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20items%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FTag%27%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20status%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20pet%20status%20in%20the%20store%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20enum%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20available%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20pending%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20-%20sold%0A%C2%A0%20%C2%A0%20%C2%A0%20xml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20Pet%0A%C2%A0%20%C2%A0%20ApiResponse%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20properties%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20code%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20integer%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20format%3A%20int32%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20message%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20string%0A%C2%A0%20requestBodies%3A%0A%C2%A0%20%C2%A0%20Pet%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20content%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20application%2Fjson%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20schema%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FPet%27%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20application%2Fxml%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20schema%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FPet%27%0A%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20Pet%20object%20that%20needs%20to%20be%20added%20to%20the%20store%0A%C2%A0%20%C2%A0%20%C2%A0%20required%3A%20true%0A%C2%A0%20%C2%A0%20UserArray%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20content%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20application%2Fjson%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20schema%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20array%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20items%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%24ref%3A%20%27%23%2Fcomponents%2Fschemas%2FUser%27%0A%C2%A0%20%C2%A0%20%C2%A0%20description%3A%20List%20of%20user%20object%0A%C2%A0%20%C2%A0%20%C2%A0%20required%3A%20true%0A%C2%A0%20securitySchemes%3A%0A%C2%A0%20%C2%A0%20petstore_auth%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20oauth2%0A%C2%A0%20%C2%A0%20%C2%A0%20flows%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20implicit%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20authorizationUrl%3A%20%27http%3A%2F%2Fpetstore.swagger.io%2Foauth%2Fdialog%27%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20scopes%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%27write%3Apets%27%3A%20modify%20pets%20in%20your%20account%0A%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%27read%3Apets%27%3A%20read%20your%20pets%0A%C2%A0%20%C2%A0%20api_key%3A%0A%C2%A0%20%C2%A0%20%C2%A0%20type%3A%20apiKey%0A%C2%A0%20%C2%A0%20%C2%A0%20name%3A%20api_key%0A%C2%A0%20%C2%A0%20%C2%A0%20in%3A%20header

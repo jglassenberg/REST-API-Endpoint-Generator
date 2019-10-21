@@ -1,0 +1,217 @@
+<html>
+<head>
+    <style>
+        a.e1:hover {
+            background-color: yellow;
+        }
+    </style>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.js"></script> -->
+    <!--<script src="yaml.js"></script>-->
+    <script src="js-yaml.js"></script>
+    <script src="APIFunctionMaker.js"></script> 
+    <!--<script src="http://nodeca.github.io/js-yaml/demo.js"></script> -->
+<script type="text/javascript">
+
+    
+/*
+The starter function, to obtain the new OpenAPI schema based on customization requests from either the page or URL requests.
+
+Returns: JSON for the updated OpenAPI schema
+
+Parameters:
+- jsonParam: The content of the original OpenAPI schema in JSON format
+- output: the TextArea on the page to print the content
+- yamlOutput: whether the user has requested in the interface to return a YAML schema instead of JSON
+- hasQueryParams: whether the user has chosen to add the standard search and filter parameters to list endpoints
+- pagination: whether the user has chosen to apply a standard form of pagination to list endpoints
+- securityKeyParameters: whether the user has chosen to add standard security key components and parameters, and if so, the list of chosen parameters
+- hasErrorSchemas: whether the user has chosen to add a standard error component.  This is not currently in use.  We assume the user wants this applied.
+- updateType: Whether the user wants to have PUT endpoints, PATCH endpoints, or both.
+*/ 
+function createAndPrint(jsonParam, output, yamlOutput, hasQueryParams, pagination, securityKeyParameters, hasErrorSchemas, updateType){
+    
+    //Obtain functions in JSON format
+    var outputJson = createRESTFunctions(jsonParam, hasQueryParams, pagination, securityKeyParameters, hasErrorSchemas, updateType);
+    
+    //Display JSON in text area
+    if (yamlOutput){
+        document.getElementById(output).value = JSON.stringify(outputJson,undefined,4);
+    }
+    else{
+        //Display YAML converted content in text area
+        document.getElementById(output).value = jsyaml.dump(jsyaml.load(JSON.stringify(outputJson)));
+    }
+    
+    return outputJson;
+    
+   
+}
+    
+/*
+Initiates the OpenAPI update process from a URL request. It'll either print the content in the page, or redirect to a URL specified in the URL request  
+*/
+function startifParam(){   
+    
+    //Obtain optional custom selecion parameters
+    var outputChoice = findGetParameter('outputChoice');
+    if (!outputChoice) outputChoice = "json"; //By default JSON output is expected
+    
+    //Obtain request for search parameters
+    var hasQueryParams = findGetParameter('hasQueryParams');
+    if (!hasQueryParams) hasQueryParams = true;
+    
+    //Obtain request for pagination type
+    var pagination = findGetParameter('pagination');
+    
+    //Obtain list of security schema choices
+    var securityKeyParameters = findGetParameter('securityKeys'); 
+    securityKeyParameters = securityKeyParameters.split(","); //Converts the list from the query to an array
+   
+    //Obtain whether PUT, PATCH, or both endpoint types should be provided
+    var updateType = findGetParameter('updateType'); 
+    if (!updateType) updateType="Both";
+    
+    //If JSON is provided, perform the operations on JSON
+    var jsonObj = findGetParameter('json'); 
+    var result = "";
+    if (jsonObj){
+        result = createAndPrint(jsonObj,'output',true, hasQueryParams, pagination, securityKeyParameters, true, updateType);
+    }
+    
+    //If YAML input is provided, convert to JSON and perform the same request
+    var yamlObj = findGetParameter('yaml');
+    
+    if (yamlObj){
+        result = createAndPrint(JSON.stringify(jsyaml.load(jsyaml.dump(yamlObj)), null, 4),'output', false, hasQueryParams, pagination, securityKeyParameters ,true, updateType);   
+    }
+    
+    //If there is a redirect URL, we redirect to that URL with the data
+    var redirectUrl = findGetParameter('redirectUrl')
+    
+    if (redirectUrl) {
+        //First determine whether we are to return JSON or YAML for the final OpenAPI schema
+        if (outputChoice=="yaml") {
+            result = jsyaml.dump(jsyaml.load(JSON.stringify(result)));
+        }
+        else {
+            result = JSON.stringify(result,undefined,4);   
+        }
+        
+        //Redirect operation takes place
+        window.location.replace(redirectUrl+"?schema="+encodeURI(result));
+    }
+    
+}
+
+</script>
+</head>
+<body onload='startifParam()'>
+    
+    Welcome to API Strategist's API Function Maker!  This tool accepts an OpenAPI schema containing the core components for your API, and automatically generates API endpoints for you.
+    
+    <br/><br/>
+    
+    <strong style="background-Color:skyblue; hover {background-color: yellow;}"><a class="e1" onclick="document.getElementById('Instructions1').style='background:lightgrey';document.getElementById('Instructions2').style='display:none';">UI Instructions:</a></strong>
+    <strong style="background-Color:lightgreen; hover {background-color: yellow;}"><a class="e1" onclick="document.getElementById('Instructions2').style='background:lightgrey';document.getElementById('Instructions1').style='display:none';">API Instructions:</a></strong>
+    <br/><br/>
+    <div id="Instructions1" style='background:lightgrey'>
+        - Paste your OpenAPI schema in the text area below <br/>
+        - Customize how you want your functions defined. <br/> 
+        - Press "Create Functions." <br/> 
+        <br/>
+    </div>
+    <div id="Instructions2" style="display:none">
+        - Load this page with the following query parameters: <br/>
+        - json: A URL endoded JSON representation of your full OpenAPI schema. Provide either this, or 'yaml'. <br/> 
+        - yaml: A URL endoded JSON representation of your full OpenAPI schema. Provide either this, or 'json'. <br/>
+        - hasQueryParms: Can be 'true' or 'false' (optional: default is 'true').  Whether you want standard query/search parameters in your final schema. <br/>
+        - pagination: Can be 'Limit-Offset' or 'Next-Prev' (optional).  Whether you want standard pagination parameters in your final schema, of your choice of pagination format. <br/>
+        - updateType: Can be 'PUT', 'PATCH' or 'BOTH' (optional: default is 'BOTH').  Whether you want only PUT endpoints or PATCH endpoints returned, or whether you want both. <br/>
+        - redurectURL: (optional: default is 'json').  The URL to which you'd like us to redirect and return the updated OpenAPI schema.  The content of the schema will be provided as a URL encoded query parameter, 'schema' in the format chosen. <br/>
+        <br/>
+    </div>
+    
+     
+    
+    
+    <table>
+        <tr>
+            <td>
+                <input type="checkbox" id="searchAndFilter"> Add search filter parameters to list functions &nbsp;&nbsp;&nbsp;</input> 
+            </td>
+            <td>
+                Would you like PATCH endpoints, or PUT endpoints?
+                <form id="updateChoice">
+                    <input type="radio" name="updateType" value="PATCH" checked> PATCH
+                    <input type="radio" name="updateType" value="PUT"> PUT
+                    <input type="radio" name="updateType" value="Both" > Both
+                </form> 
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox" id="paginate" onClick="(document.getElementById('paginate').checked ? (document.getElementById('pagination').style='background:lightgrey')  : (document.getElementById('pagination').style='display: none'))"> Add Pagination parameters to list functions </input>
+            </td>
+            <td>
+                 <input type="checkbox" id="securitySchema" onClick="(document.getElementById('securitySchema').checked ? (document.getElementById('securityChoices').style='background:lightgrey')  : (document.getElementById('securityChoices').style='display: none'))"> Add security schema object to list functions </input><br/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                 <div id="pagination" style="display: none">
+                    What type of pagination would you like? <br/> 
+                    <select id="paginationChoice">
+                        <option value="Limit-Offset">Limit-Offset</option>
+                        <option value="Next-Prev">Next-Previous</option>
+                    </select>
+                    <br/>
+                </div>
+            </td>
+            <td>
+                <div id="securityChoices" style="display: none">
+                    What security schemes would you like?  <br/>
+                    <input type="checkbox" id="OpenID" value="OpenID"> OpenID </input><br/>
+                    <input type="checkbox" id="ApiKeyAuth" value="ApiKeyAuth"> API Key Auth </input><br/>
+                    <input type="checkbox" id="BearerToken" value="BearerAuth"> Bearer Auth </input><br/>
+                    <input type="checkbox" id="Oauth2" value="Oauth2"> Oauth 2 </input><br/>
+                    <input type="checkbox" id="BasicAuth" value="BasicAuth"> Basic Auth </input><br/>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+    <table>
+        <tr>
+            <td>
+                <strong>Enter your OpenAPI schema here:</strong><br/><br/>
+            </td>
+            <td>
+                Choose your output format:
+    <input type="radio" name="outputtype" value="json" checked> JSON
+    <input type="radio" name="outputtype" value="yaml"> YAML
+                <button onclick="createAndPrint(document.getElementById('jsonParam').value,'output',document.getElementsByName('outputtype')[0].checked,document.getElementById('searchAndFilter').checked, (document.getElementById('paginate').checked ? document.getElementById('paginationChoice').value : false), [(document.getElementById('OpenID').checked ? document.getElementById('OpenID').value : null),(document.getElementById('ApiKeyAuth').checked ? document.getElementById('ApiKeyAuth').value : null),(document.getElementById('BearerToken').checked ? document.getElementById('BearerToken').value : null),(document.getElementById('Oauth2').checked ? document.getElementById('Oauth2').value : null),(document.getElementById('BasicAuth').checked ? document.getElementById('BasicAuth').value : null)],document.getElementById('errorSchema').checked, document.getElementById('updateChoice').elements['updateType'].value)">Create Functions</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+                <textarea rows="22" cols="60" id="jsonParam"></textarea>
+                <br/><br/>
+            </td>
+            <td>
+                
+<textarea rows="22" cols="60" readonly id="output"></textarea>
+            </td>
+        </tr>
+       
+  
+
+    <div style="display: none"><input type="checkbox" id="errorSchema" checked=true > Add standard Error schema objects to list functions </input></div><br/>
+
+
+    
+
+<!--<textarea rows="22" cols="102" read-only="true" id="yaml_output"></textarea><br/>
+    <div id="yamlconvert"></div>-->
+</body>
+</html>
