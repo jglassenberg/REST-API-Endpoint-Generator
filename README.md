@@ -3,6 +3,11 @@ Welcome! This is a simple project that Automatically generates REST API Endpoint
 
 # What it does
 
+When defining an API under the OpenAPI specification, functions have a common pattern. With CRUD operations all around the same components referenced, so that functions have consistency in their format, in their inputs, outputs, etc, one realizes that much of this can be auto-generated.
+
+When the underlying component schemas for an OpenAPI doc are defined, the functions are mostly straightforward to create. The idea here is to easily do that - define your component schemas, then autogenerate your endpoints.
+
+In the process, one can auto-fill much of the rest of the OpenAPI doc: establishing security rules, pagination for lists, and errors.  These are provided as well in this project.
 
 # How it Works - Demo App
 
