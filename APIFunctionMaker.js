@@ -179,6 +179,10 @@ Returns:
 */    
 function addTagComponents(finalObj){
     
+    if (!finalObj.tags){
+        finalObj.tags = new Array();
+    }
+    
     var myObj = finalObj;
     
     var i = 0;
@@ -186,16 +190,22 @@ function addTagComponents(finalObj){
     for(var x of Object.keys(myObj.components.schemas)) {
         // Go through each component and create a tag for each name
         var description = "";
-        if (myObj.components.schemas[x].description) description = myObj.components.schemas[x].description;
-        finalObj.tags[i++]= {
+        
+        if (myObj.components.schemas[x].description) {
+            description = myObj.components.schemas[x].description;
+        }
+        
+        var newTag = {
 		  "name": x,
 		  "description": description,
           "externalDocs": {
               "description":"",
 		      "url":""
           } 
-	   };        
-
+	    }; 
+        //console.log(JSON.stringify(newTag));
+        finalObj.tags = finalObj.tags.concat(newTag);
+        //console.log(JSON.stringify(finalObj.tags));
     }
         
 }
@@ -408,6 +418,7 @@ function addErrorSchema(finalObj){
     var i = 0;
 	
     //Create a standard Error schema
+    
     finalObj.components.schemas["Error"]= {
         "type": "object",
         "properties": {
@@ -417,12 +428,24 @@ function addErrorSchema(finalObj){
             "message":{
                 "type":"string"
             },
-            "required":[
+        }
+    };
+    
+    /*finalObj.components.schemas["Error"]= {
+        "type": "object",
+        "properties": {
+            "code":{
+                "type":"string"   
+            },
+            "message":{
+                "type":"string"
+            },
+            "required":[//TODO: how to resolve this?
                 "code",
                 "message"
             ]
         }
-    };
+    };*/
     
     if (!finalObj.components.responses){
         finalObj.components.responses = {};   
@@ -591,7 +614,6 @@ Returns
 - A list of pagination parameters to add as parameters to a CRUD path.
 */ 
 function getPaginationParameters(paginationType){
-    //alert(paginationType);
     
     if (paginationType == "Limit-Offset"){
        /* var paginationParams = [ {
@@ -786,21 +808,36 @@ Returns:
 */ 
 function setGetSublist(name,subname, ref, hasQueryParams, paginationParams, securityParameters){
     
+    //var singularSubname = subname;
     var splural=subname.plural();
     
     var queryParams = getPaginationParameters(paginationParams);
     
+    //If the developer requested query and filter parametrs, those should be added to the list of paramters too.
     if (hasQueryParams){
        queryParams = queryParams.concat(getSearchParameters());
     }
     
-    //alert(hasQueryParams);
+    //Make sure the id is one of the parameters as well.
+    idParam = {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the "+name+" to get",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "uuid"
+          }
+        };
+    
+    queryParams = queryParams.concat(idParam);
+    
     var getList = {
       "get" : {
         "tags" : [ name ],
         "summary" : "List of "+splural+" within a given "+name+".",
         "description" : "List of "+splural+" within a given "+name+".",
-        "operationId" : "get"+splural,
+        "operationId" : "get"+splural+"_s",
         "security" : securityParameters,
         "parameters" : queryParams,
         "responses" : {
@@ -861,7 +898,7 @@ function setGetItem(name, securityParameters){
                     "type":"string",
                     "format":"uuid"
                  },
-                 "required":"true",
+                 "required":true,
                  "description": "Numeric ID of the "+ name + " to get"
             }
          ],
@@ -914,9 +951,15 @@ function setPost(name, securityParameters){
          "description":"Create a new "+name,
          "operationId": "add"+name,//TODO: fill in
          "security": securityParameters,
-         "requestBody": { //TODO: we can detect if a requestBody was specially defined here
-            "$ref": "#/components/schemas/"+name
-         },  
+         "requestBody": {
+            "content":{
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/"+name
+                    }
+                }
+            }
+          }, 
          "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -964,7 +1007,7 @@ function setPostSub(name, subname, ref, securityParameters){
          "tags": [ name],   
          "summary":"Create a new "+subname+" within a "+name,
          "description":"Create a new "+subname+" within a "+name,
-         "operationId": "add"+subname,//TODO: fill in
+         "operationId": "add"+subname+"_s",
          "security": securityParameters,
          "parameters":[
              {
@@ -974,13 +1017,19 @@ function setPostSub(name, subname, ref, securityParameters){
                     "type":"string",
                     "format":"uuid"
                  },
-                 "required":"true",
+                 "required":true,
                  "description": "Numeric ID of the "+ name + " to get"
             }
          ],
-         "requestBody": { //TODO: this will be dynamic
-            "$ref": "#/components/schemas/"+subname
-         },  
+         "requestBody": {
+            "content":{
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/"+subname
+                    }
+                }
+            }
+          }, 
          "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -1038,12 +1087,18 @@ function setPut(name, securityParameters){
                     "type":"string",
                     "format":"uuid"
                  },
-                 "required":"true",
+                 "required":true,
                  "description": "Numeric ID of the "+name+" to update"
             }
           ],
           "requestBody": {
-            "$ref": "#/components/requestBodies/"+name
+            "content":{
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/"+name
+                    }
+                }
+            }
           },
           "responses" : {
            "200" : {
@@ -1094,7 +1149,13 @@ function setPatch(name, securityParameters){
          "operationId": "update"+name,
          "security": securityParameters,
          "requestBody": {
-            "$ref": "#/components/requestBodies/"+name
+            "content":{
+                "application/json":{
+                    "schema":{
+                        "$ref": "#/components/schemas/"+name
+                    }
+                }
+            }
           },
          "parameters":[
              {
@@ -1104,7 +1165,7 @@ function setPatch(name, securityParameters){
                     "type":"string",
                     "format":"uuid"
                  },
-                 "required":"true",
+                 "required":true,
                  "description": "Numeric ID of the "+name+" to update"
             }
          ],
@@ -1154,7 +1215,7 @@ function setDelete(name, securityParameters){
         "operationId" : "delete"+name,
         "security" : securityParameters,
         "parameters" : [ {
-          "name" : name+"Id",
+          "name" : "id",
           "in" : "path",
           "description" : "ID of the "+name+" to delete",
           "required" : true,
@@ -1254,9 +1315,12 @@ function createRESTFunctions(jsonParam, hasQueryParams, pagination, securityType
 
             //Sublist handler, for when Components contain subComponents
             if ((myObj.components.schemas[x].properties[y].type =="array")&&(myObj.components.schemas[x].properties[y].items['$ref'])){
+                var singularSubname = myObj.components.schemas[x].properties[y].items['$ref'];
+                singularSubname = singularSubname.substring(singularSubname.lastIndexOf("/")+1);
             
-                finalObj.paths["/"+x.toLowerCase().plural()+"/{id}/"+y.toLowerCase().plural()] = setGetSublist(x, y,myObj.components.schemas[x].properties[y].items['$ref'], hasQueryParams, pagination, securityParameters);
-                finalObj.paths["/"+x.toLowerCase().plural()+"/{id}/"+y.toLowerCase().plural()].post = setPostSub(y,myObj.components.schemas[x].properties[y].items['$ref'], securityParameters);
+                //finalObj.paths["/"+x.toLowerCase().plural()+"/{id}/"+y.toLowerCase().plural()] = setGetSublist(x, y,myObj.components.schemas[x].properties[y].items['$ref'], hasQueryParams, pagination, securityParameters);
+                finalObj.paths["/"+x.toLowerCase().plural()+"/{id}/"+y.toLowerCase().plural()] = setGetSublist(x, singularSubname,myObj.components.schemas[x].properties[y].items['$ref'], hasQueryParams, pagination, securityParameters);
+                finalObj.paths["/"+x.toLowerCase().plural()+"/{id}/"+y.toLowerCase().plural()].post = setPostSub(x, singularSubname,myObj.components.schemas[x].properties[y].items['$ref'], securityParameters);
             
             }
         }
