@@ -9,7 +9,7 @@ When the underlying component schemas for an OpenAPI doc are defined, the functi
 
 In the process, one can auto-fill much of the rest of the OpenAPI doc: establishing security rules, pagination for lists, and errors.  These are provided as well in this project.
 
-<a href="demo">View Working Demo </a>
+<a href="https://jglassenberg.github.io/REST-API-Endpoint-Generator/demo">View Working Demo </a>
 
 # How it Works - Demo App
 
