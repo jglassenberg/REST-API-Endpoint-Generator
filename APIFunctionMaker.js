@@ -349,8 +349,8 @@ function addSecuritySchemes(finalObj, securityTypes){
     }
 	
     //Make sure security scheme section is defined
-    if (!finalObj.securitySchemes){
-        finalObj.securitySchemes = new Array();
+    if (!finalObj.components.securitySchemes){
+        finalObj.components.securitySchemes = new Array();
     }
     
     //The developer may have selected several components to define in the schema, so we loop through all they chose.
