@@ -842,7 +842,7 @@ function setGetSublist(name,subname, ref, hasQueryParams, paginationParams, secu
         "tags" : [ name ],
         "summary" : "List of "+splural+" within a given "+name+".",
         "description" : "List of "+splural+" within a given "+name+".",
-        "operationId" : "get"+splural+"_s",
+        "operationId" : "get"+name+'_'+splural+"_s",
         "security" : securityParameters,
         "parameters" : queryParams,
         "responses" : {
@@ -1012,7 +1012,7 @@ function setPostSub(name, subname, ref, securityParameters){
          "tags": [ name],   
          "summary":"Create a new "+subname+" within a "+name,
          "description":"Create a new "+subname+" within a "+name,
-         "operationId": "add"+subname+"_s",
+         "operationId": "add"+name+'_'+subname+"_s",
          "security": securityParameters,
          "parameters":[
              {
