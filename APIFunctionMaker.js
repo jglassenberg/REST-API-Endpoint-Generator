@@ -715,7 +715,7 @@ function getSecurityParameters(finalObj, securityTypes, component){
         } 
         else if (securityTypes[i] == "BearerAuth"){
             securityParameters[securityParameters.length] = {};
-            securityParameters[securityParameters.length-1]["bearerAuth"] = [];
+            securityParameters[securityParameters.length-1]["BearerAuth"] = [];
         } 
         else if (securityTypes[i] == "OpenID"){
             //We don't add this to the functions by default.  Only API Keys and Oauth.
